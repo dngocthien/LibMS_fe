@@ -1,25 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
+import BorrowManagement from "./components/BorrowsManagement/BorrowsManagement"
+import UserManagement from "./components/UsersManagement/UsersManagement"
+import BookManagement from "./components/BooksManagement/BooksManagement"
+import NoPage from "./components/NoPage/NoPage"
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<BorrowManagement />} />
+          <Route path="books" element={<BookManagement />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(<App />);
 export default App;

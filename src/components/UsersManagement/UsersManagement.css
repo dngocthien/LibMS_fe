@@ -1,0 +1,28 @@
+
+.users-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filters{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.users-container{
+    width: 100%;
+    display: flex;
+    padding-top: 1rem;
+}
+.users-container table{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.users-container table img{
+    height: 25px;
+    margin-right: 1rem;
+    cursor: pointer;
+}
