@@ -1,11 +1,11 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import icon_delete from "../../assets/delete.png";
 import icon_edit from "../../assets/edit.png";
 import "./UsersManagement.css"
 import { DB_URL } from "../../constants";
-import AddUser from './AddUser';
 
 const UserManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,14 +37,15 @@ const UserManagement = () => {
           type="text"
           placeholder="Search"
           onChange={(e) => setSearchQuery(e.target.value)}
-          // onChange={() => setSearchQuery(document.getElementById("searching").value)}
-
         />
 
-        <button className='btn-yellow'>
-          Add User
-        </button>
+        <Link className='text-link' to='/users/new'>
+          <button className='btn-yellow'>
+            Add User
+          </button>
+        </Link>
       </div>
+
 
       <div className='filters'>
         <button className='btn-light-small'>
@@ -52,7 +53,6 @@ const UserManagement = () => {
         </button>
       </div>
 
-      <AddUser />
 
       <div className='users-container'>
         <table>

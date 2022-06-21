@@ -26,3 +26,36 @@
     margin-right: 1rem;
     cursor: pointer;
 }
+
+.users-add{
+    border-radius: 10px;
+    background-color: var(--light2);
+    padding: 1rem 3rem;
+    margin: 2rem;
+}
+.users-add table{
+    margin-left: 2rem;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.users-add table tr{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.users-add p{
+    font-weight: 500;
+}
+.users-add table input{
+    border: none;
+    border-radius: 5px;
+    padding: .5rem 1rem;
+    margin: 0 4rem;
+    width: 17rem;
+}
+.users-add-footer{
+    display: flex;
+    justify-content: flex-end;
+}
