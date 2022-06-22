@@ -1,5 +1,8 @@
 @import "../../vars.css";
 
+/* Common */
+/* Common */
+/* Common */
 .text-link {
     color: inherit;
     text-decoration: inherit;
@@ -7,9 +10,9 @@
 .search{
     border: 1px solid var(--grey);
     border-radius: 15px;
-    padding: .8rem;
+    padding: .7rem;
     margin-left: 3rem;
-    height: 1rem;
+    height: 0.8rem;
     width: 100%;
 }
 .btn-yellow{
@@ -17,7 +20,7 @@
     background-color: var(--yellow);
     border: none;
     border-radius: 10px;
-    padding: 1rem 2rem;
+    padding: 0.7rem 2rem;
     margin-left: 2rem;
     white-space: nowrap;
     cursor: pointer;
@@ -27,7 +30,7 @@
     background-color: var(--light1);
     border: none;
     border-radius: 10px;
-    padding: 1rem 2rem;
+    padding: .7rem 2rem;
     white-space: nowrap;
     cursor: pointer;
 }
@@ -36,14 +39,24 @@
     background-color: var(--light1);
     border: none;
     border-radius: 10px;
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
     white-space: nowrap;
     cursor: pointer;
 }
 .highlight{
     background-color: var(--light2);
 }
+.filters{
+    display: flex;
+    justify-content: space-between;
+}
+.filters-select{
+    min-width: 10rem;
+}
 
+/* Navbar */
+/* Navbar */
+/* Navbar */
 .navbar {
     padding: 1rem 2rem 0 2rem;
     display: flex;
@@ -63,10 +76,13 @@
     padding-left: 2rem;
     font-weight: 600;
 }
-
 .outlet {
     padding: 0rem 2rem;
 }
+
+/* Font */
+/* Font */
+/* Font */
 h1{
     font-size: 32px;
     font-weight: 700;
@@ -75,4 +91,33 @@ h1{
 h2{
     font-size: 24px;
     font-weight: 700;
+}
+
+/* View */
+/* View */
+/* View */
+.view-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.view-container{
+    width: 100%;
+    display: flex;
+    padding-top: 1rem;
+}
+.view-container table{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.view-container table img{
+    height: 25px;
+    margin: .5rem;
+    cursor: pointer;
+}
+.view-container table th{
+    background-color: var(--light1);
+    border: 0;
 }

@@ -7,6 +7,7 @@ import UserManagement from "./components/UsersManagement/UsersManagement"
 import UserAdding from "./components/UsersManagement/UserAdding"
 import BookManagement from "./components/BooksManagement/BooksManagement"
 import NoPage from "./components/NoPage/NoPage"
+import BookAdding from './components/BooksManagement/BookAdding';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<BorrowManagement />} />
           <Route path="books" element={<BookManagement />} />
+          <Route path="books/new" element={<BookAdding />} />
           <Route path="users" element={<UserManagement />} />
           <Route path="users/new" element={<UserAdding />} />
           <Route path="*" element={<NoPage />} />

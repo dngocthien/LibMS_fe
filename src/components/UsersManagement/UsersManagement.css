@@ -1,61 +1,35 @@
-
-.users-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.filters{
-    display: flex;
-    justify-content: flex-end;
-}
-
-.users-container{
-    width: 100%;
-    display: flex;
-    padding-top: 1rem;
-}
-.users-container table{
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-.users-container table img{
-    height: 25px;
-    margin-right: 1rem;
-    cursor: pointer;
-}
-
 .users-add{
     border-radius: 10px;
     background-color: var(--light2);
     padding: 1rem 3rem;
     margin: 2rem;
 }
-.users-add table{
-    margin-left: 2rem;
-    width: 100%;
+.users-add-details-details{
     justify-content: center;
+}
+.users-add-details table{
+    margin: auto;
+    justify-content: right;
     align-items: center;
 }
-.users-add table tr{
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+.users-add-details td{
+    text-align: right;
 }
-.users-add p{
+.users-add-details p{
     font-weight: 500;
 }
-.users-add table input{
+.users-add-details table input{
     border: none;
     border-radius: 5px;
     padding: .5rem 1rem;
-    margin: 0 4rem;
+    margin-left: 2rem;
     width: 17rem;
+}
+.users-add-details-select{
+    margin-left: 2rem;
 }
 .users-add-footer{
     display: flex;
     justify-content: flex-end;
+    margin: 2rem 6rem 2rem 0;
 }

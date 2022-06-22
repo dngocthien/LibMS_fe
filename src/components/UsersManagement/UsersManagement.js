@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 import icon_delete from "../../assets/delete.png";
 import icon_edit from "../../assets/edit.png";
@@ -8,8 +9,13 @@ import "./UsersManagement.css"
 import { DB_URL } from "../../constants";
 
 const UserManagement = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
+
+  const report = [
+    { label: "Expired Users", value: 1 },
+  ]
 
   useEffect(() => {
     fetch(DB_URL + "users/" + searchQuery,
@@ -27,8 +33,8 @@ const UserManagement = () => {
   };
 
   return (
-    <div className='users'>
-      <div className='users-header'>
+    <div className='view'>
+      <div className='view-header'>
         <h1>Users Management</h1>
 
         <input
@@ -39,22 +45,27 @@ const UserManagement = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <Link className='text-link' to='/users/new'>
-          <button className='btn-yellow'>
-            Add User
-          </button>
-        </Link>
+        <button className='btn-yellow' onClick={() => navigate("/users/new")}>
+          Add User
+        </button>
       </div>
 
 
       <div className='filters'>
+        <Select
+          className='filters-select'
+          options={report}
+          placeholder="Report"
+        // onChange={(e) => changeBrand(e)}
+        />
+
         <button className='btn-light-small'>
           Export
         </button>
       </div>
 
 
-      <div className='users-container'>
+      <div className='view-container'>
         <table>
           <thead>
             <tr>
@@ -83,11 +94,8 @@ const UserManagement = () => {
                   <td>
                     <p>
                       <img
-                        src={icon_delete}
-                      // onClick={() => removeProducts(p.name)}
-                      />
-                      <img
                         src={icon_edit}
+                        alt="edit"
                       // onClick={() => switchEditProduct(p)}
                       />
                     </p>
