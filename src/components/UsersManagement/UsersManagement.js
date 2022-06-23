@@ -13,7 +13,9 @@ const UserManagement = () => {
   const [data, setData] = useState([]);
 
   const report = [
-    { label: "Expired Users", value: 1 },
+    { label: "All Users", value: 0 },
+    { label: "Active Users", value: 1 },
+    // { label: "Overdue Users", value: 2 },
   ]
 
   useEffect(() => {
@@ -26,6 +28,31 @@ const UserManagement = () => {
         setData(result);
       });
   }, [searchQuery]);
+
+  function filterReport(filter) {
+    switch (filter.value) {
+      case 0:
+        fetch(DB_URL + "users" ,
+          {
+            method: "get"
+          })
+          .then((res) => res.json())
+          .then((result) => {
+            setData(result);
+          });
+        break;
+      case 1:
+        fetch(DB_URL + "users/active" ,
+          {
+            method: "get"
+          })
+          .then((res) => res.json())
+          .then((result) => {
+            setData(result);
+          });
+        break;
+    }
+  }
 
   function getDate(d) {
     return (d.substr(0, 10));
@@ -55,7 +82,7 @@ const UserManagement = () => {
           className='filters-select'
           options={report}
           placeholder="Report"
-        // onChange={(e) => changeBrand(e)}
+        onChange={(e) => filterReport(e)}
         />
 
         <button className='btn-light-small'>

@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { DB_URL } from '../../constants';
 
-const UserAdding = () => {
+const UserDetails = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const { user } = state;
@@ -136,4 +136,4 @@ const UserAdding = () => {
     )
 }
 
-export default UserAdding
+export default UserDetails

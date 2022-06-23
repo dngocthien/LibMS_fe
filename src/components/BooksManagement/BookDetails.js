@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { DB_URL } from '../../constants';
 
-const BookAdding = () => {
+const BookDetails = () => {
     const navigate = useNavigate();
     const locate = useLocation();
     const { state } = locate;
@@ -125,4 +125,4 @@ const BookAdding = () => {
     )
 }
 
-export default BookAdding
+export default BookDetails

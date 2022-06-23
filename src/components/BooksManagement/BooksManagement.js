@@ -14,7 +14,8 @@ const BooksManagement = () => {
   const [data, setData] = useState([]);
 
   const report = [
-    { label: "Top Books", value: 1 },
+    { label: "All Books", value: 0 },
+    // { label: "Top Books", value: 1 },
     { label: "None Books", value: 2 },
   ]
 
@@ -29,11 +30,39 @@ const BooksManagement = () => {
       });
   }, [searchQuery]);
 
+  function filterReport(filter) {
+    switch (filter.value) {
+      case 0:
+        fetch(DB_URL + "books" ,
+          {
+            method: "get"
+          })
+          .then((res) => res.json())
+          .then((result) => {
+            setData(result);
+          });
+        break;
+      case 1:
+        console.log("still working");
+        break;
+      case 2:
+        fetch(DB_URL + "books/none" ,
+          {
+            method: "get"
+          })
+          .then((res) => res.json())
+          .then((result) => {
+            setData(result);
+          });
+        break;
+    }
+  }
+
   function authorsToString(list) {
     let authors = "";
     list.map((a) => authors += a + ", ")
-    return authors.slice(0,-2);
-};
+    return authors.slice(0, -2);
+  };
 
   function removeBook(id) {
     fetch(DB_URL + "books/" + id, {
@@ -57,7 +86,7 @@ const BooksManagement = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <button className='btn-yellow' onClick={()=>navigate("/books/details", {state:{book:null}})}>
+        <button className='btn-yellow' onClick={() => navigate("/books/details", { state: { book: null } })}>
           Add Book
         </button>
       </div>
@@ -68,7 +97,7 @@ const BooksManagement = () => {
           className='filters-select'
           options={report}
           placeholder="Report"
-        // onChange={(e) => changeBrand(e)}
+          onChange={(e) => filterReport(e)}
         />
 
         <button className='btn-light-small'>
@@ -115,7 +144,7 @@ const BooksManagement = () => {
                       <img
                         src={icon_edit}
                         alt="edit"
-                        onClick={()=>navigate("/books/details", {state:{book:d}})}
+                        onClick={() => navigate("/books/details", { state: { book: d } })}
                       />
                     </p>
                   </td>

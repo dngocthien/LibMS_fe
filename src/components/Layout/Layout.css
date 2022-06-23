@@ -15,6 +15,14 @@
     height: 0.8rem;
     width: 100%;
 }
+.search-small{
+    border: 1px solid var(--grey);
+    border-radius: 10px;
+    padding: .7rem;
+    margin-left: 3rem;
+    height: 0.8rem;
+    width: 18rem;
+}
 .btn-yellow{
     font-weight: 700;
     background-color: var(--yellow);
