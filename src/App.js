@@ -16,9 +16,9 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<BorrowManagement />} />
           <Route path="books" element={<BookManagement />} />
-          <Route path="books/new" element={<BookAdding />} />
+          <Route path="books/details" element={<BookAdding />} />
           <Route path="users" element={<UserManagement />} />
-          <Route path="users/new" element={<UserAdding />} />
+          <Route path="users/details" element={<UserAdding />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

@@ -1,14 +1,18 @@
 import React from 'react'
 import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { DB_URL } from '../../constants';
 
 const UserAdding = () => {
     const navigate = useNavigate();
-    const [name, setName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
+    const { state } = useLocation();
+    const { user } = state;
+    const [existed, setExisted] = useState(user == null ? false : true)
+
+    const [name, setName] = useState(user != null ? user.name : "");
+    const [phone, setPhone] = useState(user != null ? user.phone : "");
+    const [email, setEmail] = useState(user != null ? user.email : "");
     const [duration, setDuration] = useState(0);
 
     const durations = [
@@ -20,11 +24,9 @@ const UserAdding = () => {
 
     function addUser() {
         if (1) {
-            let issuedDate = new Date();
+            let issuedDate = user == null ? new Date() : user.expiredDate;
             let expiredDate = new Date();
             expiredDate.setMonth(issuedDate.getMonth() + duration);
-
-            console.log(name + ":" + phone + ":" + email + ":" + issuedDate + ":" + expiredDate);
 
             fetch(DB_URL + "users", {
                 method: "post",
@@ -42,15 +44,15 @@ const UserAdding = () => {
                     // }
 
                     {
-                        "name": "testmoreandmore4",
-                        "phone": "123456789",
-                        "email": "test@gmail.com",
-                        "issuedDate": "2022-02-13T14:45:15",
-                        "expiredDate": "2023-02-13T14:45:15"
+                        name: "testmoreandmore7",
+                        phone: "123456789",
+                        email: "test@gmail.com",
+                        issuedDate: "2022-02-13T14:45:15",
+                        expiredDate: "2023-02-13T14:45:15"
                     }
                 )
             })
-            .then(navigate("/users"))
+                .then(navigate("/users"))
         }
     }
 
@@ -59,7 +61,7 @@ const UserAdding = () => {
             <h1>Users Management</h1>
 
             <div className="users-add">
-                <h2>New User</h2>
+                {existed ? <h2>Edit User</h2> : <h2>New User</h2>}
 
                 <div className='users-add-details'>
                     <table>
@@ -68,6 +70,7 @@ const UserAdding = () => {
                                 <td><p>Name</p></td>
                                 <td><input
                                     placeholder="Name"
+                                    value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 ></input></td>
                             </tr>
@@ -75,6 +78,7 @@ const UserAdding = () => {
                                 <td><p>Phone</p></td>
                                 <td><input
                                     placeholder="Phone"
+                                    value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                 ></input></td>
                             </tr>
@@ -82,17 +86,34 @@ const UserAdding = () => {
                                 <td><p>Email</p></td>
                                 <td><input
                                     placeholder="Email"
+                                    value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 ></input></td>
                             </tr>
-                            <tr>
-                                <td><p>Duration</p></td>
-                                <td><Select className='users-add-details-select'
-                                    options={durations}
-                                    placeholder="Duration"
-                                    onChange={(e) => setDuration(e.value)}
-                                /></td>
-                            </tr>
+                            {existed ?
+                                <>
+                                    <tr>
+                                        <td><p>Extend</p></td>
+                                        <td><Select className='users-add-details-select'
+                                            options={durations}
+                                            placeholder="Extend"
+                                            onChange={(e) => setDuration(e.value)}
+                                        /></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>Expiration: {user.expiredDate}</td>
+                                    </tr>
+                                </> :
+                                <tr>
+                                    <td><p>Duration</p></td>
+                                    <td><Select className='users-add-details-select'
+                                        options={durations}
+                                        placeholder="Duration"
+                                        onChange={(e) => setDuration(e.value)}
+                                    /></td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

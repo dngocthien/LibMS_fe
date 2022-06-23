@@ -29,19 +29,18 @@ const BooksManagement = () => {
       });
   }, [searchQuery]);
 
-  function getAuthors(list) {
+  function authorsToString(list) {
     let authors = "";
     list.map((a) => authors += a + ", ")
-    return authors;
-  };
+    return authors.slice(0,-2);
+};
 
   function removeBook(id) {
-    fetch(DB_URL + "books" + id, {
+    fetch(DB_URL + "books/" + id, {
       method: "DELETE",
       mode: 'no-cors',
-      credentials: 'include',
+      // credentials: 'include',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(id),
     })
   }
 
@@ -58,7 +57,7 @@ const BooksManagement = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <button className='btn-yellow' onClick={()=>navigate("/books/new")}>
+        <button className='btn-yellow' onClick={()=>navigate("/books/details", {state:{book:null}})}>
           Add Book
         </button>
       </div>
@@ -104,7 +103,7 @@ const BooksManagement = () => {
                   <td>{d.edition}</td>
                   <td>{d.price}</td>
                   <td>{d.quantity}</td>
-                  <td>{getAuthors(d.authors)}</td>
+                  <td>{authorsToString(d.authors)}</td>
                   <td>{d.categoryId}</td>
                   <td>
                     <p>
@@ -116,7 +115,7 @@ const BooksManagement = () => {
                       <img
                         src={icon_edit}
                         alt="edit"
-                      // onClick={() => switchEditProduct(p)}
+                        onClick={()=>navigate("/books/details", {state:{book:d}})}
                       />
                     </p>
                   </td>

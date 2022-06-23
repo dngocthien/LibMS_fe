@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 
-import icon_delete from "../../assets/delete.png";
 import icon_edit from "../../assets/edit.png";
 import "./UsersManagement.css"
 import { DB_URL } from "../../constants";
@@ -45,7 +44,7 @@ const UserManagement = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <button className='btn-yellow' onClick={() => navigate("/users/new")}>
+        <button className='btn-yellow' onClick={() => navigate("/users/details", {state:{user:null}})}>
           Add User
         </button>
       </div>
@@ -96,7 +95,7 @@ const UserManagement = () => {
                       <img
                         src={icon_edit}
                         alt="edit"
-                      // onClick={() => switchEditProduct(p)}
+                        onClick={() => navigate("/users/details", {state:{user:d}})}
                       />
                     </p>
                   </td>
