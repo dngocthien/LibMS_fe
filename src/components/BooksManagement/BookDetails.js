@@ -46,7 +46,7 @@ const BookDetails = () => {
     }
 
     return (
-        <div className='users'>
+        <div>
             <h1>Books Management</h1>
 
             <div className="users-add">

@@ -57,7 +57,7 @@ const UserDetails = () => {
     }
 
     return (
-        <div className='users'>
+        <div>
             <h1>Users Management</h1>
 
             <div className="users-add">

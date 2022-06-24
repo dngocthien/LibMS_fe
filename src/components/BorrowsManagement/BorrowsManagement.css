@@ -1,0 +1,16 @@
+.borrows-details{
+    padding: 2rem 4rem;
+}
+
+.borrows-details-table table{
+    padding-top: 1rem;
+    width: 100%;
+    text-align: center;
+}
+.borrows-details-table thead{
+    background-color: var(--light1);
+}
+.borrows-details-table img{
+    height: 35px;
+    cursor: pointer;
+}

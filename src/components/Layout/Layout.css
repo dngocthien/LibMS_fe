@@ -23,6 +23,14 @@
     height: 0.8rem;
     width: 18rem;
 }
+.search-tiny{
+    border: 1px solid var(--grey);
+    border-radius: 10px;
+    padding: .7rem;
+    margin-left: 3rem;
+    height: 0.8rem;
+    width: 10rem;
+}
 .btn-yellow{
     font-weight: 700;
     background-color: var(--yellow);
@@ -34,11 +42,12 @@
     cursor: pointer;
 }
 .btn-light{
-    font-weight: 500;
+    font-weight: 700;
     background-color: var(--light1);
     border: none;
     border-radius: 10px;
     padding: .7rem 2rem;
+    margin-left: 2rem;
     white-space: nowrap;
     cursor: pointer;
 }
@@ -47,7 +56,7 @@
     background-color: var(--light1);
     border: none;
     border-radius: 10px;
-    padding: 0 1rem;
+    padding: .5rem 1rem;
     white-space: nowrap;
     cursor: pointer;
 }
@@ -109,6 +118,12 @@ h2{
     justify-content: space-between;
     align-items: center;
 }
+.view-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+}
 .view-container{
     width: 100%;
     display: flex;
@@ -119,6 +134,7 @@ h2{
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding-top: 1rem;
 }
 .view-container table img{
     height: 25px;

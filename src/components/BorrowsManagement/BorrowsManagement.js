@@ -67,10 +67,10 @@ const BorrowsManagement = () => {
           id="searching"
           type="text"
           placeholder="Search"
-          onChange={(e) => setSearchQuery(e.target.value)}
+          // onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <button className='btn-yellow' onClick={() => navigate("/borrows/details", {state:{user:null}})}>
+        <button className='btn-yellow' onClick={() => navigate("/borrows/details", {state:{userId:-1}})}>
           Borrow Books
         </button>
       </div>
@@ -119,7 +119,7 @@ const BorrowsManagement = () => {
                       <img
                         src={icon_edit}
                         alt="edit"
-                        onClick={() => navigate("/borrows/details", { state: { user: d } })}
+                        onClick={() => navigate("/borrows/details", { state: {userId: d.userId } })}
                       />
                     </p>
                   </td>
