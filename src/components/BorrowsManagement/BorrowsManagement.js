@@ -53,8 +53,8 @@ const BorrowsManagement = () => {
   }
 
   function getDate(d) {
-    return d;
-    // return (d.substr(0, 10));
+    // return d;
+    return (d.substr(0, 10));
   };
 
   return (

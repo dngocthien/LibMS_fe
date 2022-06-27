@@ -9,53 +9,99 @@ const BorrowDetails = () => {
     const { state } = useLocation();
     const { userId } = state;
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchId, setSearchId] = useState(userId)
+    const [searchId, setSearchId] = useState(userId);
+    const [booksData, setBooksData] = useState([]);
+
     const [userData, setUserData] = useState(null);
     const [transactionData, setTransactionData] = useState(null);
     const [borrowsData, setBorrowsData] = useState([]);
 
-    // const [borrows, setBorrows] = useState([]);
-
-
     useEffect(() => {
-        if (searchId != -1) {
+        if (searchId !== -1) {
             setTransactionData(null);
             setBorrowsData([]);
+            setBooksData([]);
             fetch(DB_URL + "users/id/" + searchId,
                 {
                     method: "get"
                 })
                 .then((res) => res.json())
                 .then((result) => {
-                    // console.log(result)
-                    if (result != null)
-                        setUserData(result[0]);
-                });
-            fetch(DB_URL + "transactions/user/" + searchId,
-                {
-                    method: "get"
-                })
-                .then((res) => res.json())
-                .then((result) => {
-                    if (result[0] != null) {
-                        setTransactionData(result[0]);
-                        console.log(result[0])
-                    }
+                    setUserData(result[0])
                 });
 
+        //     fetch(DB_URL + "transactions/user/" + searchId,
+        //         {
+        //             method: "get",
+        //             mode: 'no-cors'
+        //         })
+        //         .then((res) => res.json())
+        //         .then((result) => {
+        //             if (result[0] != null) {
+        //                 console.log(result[0].id)
+        //                 setTransactionData(result[0]);
+
+        //                 //   ///test
+        //                 // fetch(DB_URL + "/borrows/transaction/" + result[0].id,
+        //                 //     {
+        //                 //         method: "get"
+        //                 //     })
+        //                 //     .then((res2) => res2.json())
+        //                 //     .then((result2) => {
+        //                 //         if (result2 != null) {
+        //                 //             console.log(result2[0])
+        //                 //             setBorrowsData(result2[0]);
+        //                 //         }
+        //                 //     })
+        //                 //   //
+
+        //             }
+        //         })
         }
     }, [searchId]);
 
     function borrowBook() {
+        if (booksData.length > 3) {
+            alert("You can only borrow less than 5 books!")
+            return;
+        }
         let b = document.getElementById('input-book').value;
-        let existing = borrowsData.slice();
-        let update = [...existing, { bookId: b, status: false }];
-        setBorrowsData(update);
+        fetch(DB_URL + "books/id/" + b,
+            {
+                method: "get"
+            })
+            .then((res) => res.json())
+            .then((result) => {
+                if (result[0] != null) {
+                    let existing = booksData.slice();
+                    let update = [...existing, result[0]];
+                    console.log(update)
+                    setBooksData(update);
+                }
+            });
+        document.getElementById('input-book').value = "";
+
     }
 
     function saveTransaction() {
 
     }
+
+    function removeBook(id) {
+        let existing = booksData.slice();
+        let update = existing.filter((_, i) => i !== id)
+        setBooksData(update);
+    }
+
+    function lostBook(id) {
+
+    }
+
+    function authorsToString(list) {
+        let authors = "";
+        list.map((a) => authors += a + ", ")
+        return authors.slice(0, -2);
+    };
 
     return (
         <div>
@@ -73,14 +119,14 @@ const BorrowDetails = () => {
             </div>
 
             <div className='borrows-details'>
-                {userData != null && userData != undefined && userData != [] ?
+                {userData !== null && userData !== undefined && userData !== [] ?
                     <div>
                         <h2>User ID: {userData.id}</h2>
                         <p>Name: {userData.name}</p>
                         <p>Email: {userData.email}</p>
 
 
-                        {transactionData == null ?
+                        {/* {transactionData==null?
                             <div className='view-center'>
                                 <input
                                     className='search-tiny'
@@ -95,10 +141,10 @@ const BorrowDetails = () => {
                             </div>
                             :
                             <></>
-                        }
+                        } */}
 
 
-                        {borrowsData != [] ?
+                        {borrowsData.length > 0 ?
                             <div className='view-container'>
                                 <table>
                                     <thead>
@@ -121,7 +167,56 @@ const BorrowDetails = () => {
                                                         <img
                                                             src={icon_lost}
                                                             alt="lost"
-                                                        // onClick={() => navigate("/borrows/details", { state: { userId: d.userId } })}
+                                                            onClick={() => lostBook(index)}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            :
+                            <div className='view-center'>
+                                <input
+                                    className='search-tiny'
+                                    id="input-book"
+                                    type="text"
+                                    placeholder="Book ID"
+                                    onKeyDown={(e) => { if (e.key === 'Enter') borrowBook() }}
+                                />
+                                <button className='btn-light' onClick={() => borrowBook()}>
+                                    Borrow
+                                </button>
+                            </div>
+                        }
+                        {booksData.length > 0 ?
+                            <div className='view-container'>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Book ID</th>
+                                            <th>Title</th>
+                                            <th>Authors</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {booksData.map((d, index) => {
+                                            return (
+                                                <tr
+                                                    key={index}
+                                                    className={index % 2 === 0 ? "highlight" : ""}
+                                                >
+                                                    <td>{d.id}</td>
+                                                    <td>{d.title}</td>
+                                                    <td>{authorsToString(d.authors)}</td>
+                                                    <td>
+                                                        <img
+                                                            src={icon_lost}
+                                                            alt="remove"
+                                                            onClick={() => removeBook(index)}
                                                         />
                                                     </td>
                                                 </tr>
@@ -133,7 +228,8 @@ const BorrowDetails = () => {
                             </div>
                             : <></>
                         }
-                        {borrowsData.length > 0 ?
+
+                        {booksData.length > 0 ?
                             <div className='view-center'>
                                 <button className='btn-light-small' onClick={() => saveTransaction()}>Done</button>
                             </div>
@@ -141,7 +237,7 @@ const BorrowDetails = () => {
                         }
                     </div>
                     :
-                    (searchId != -1 ? <h2>User ID not existed</h2> : <></>)}
+                    (searchId != -1 ? <h2>User ID is not existed</h2> : <></>)}
             </div>
         </div>
     )
