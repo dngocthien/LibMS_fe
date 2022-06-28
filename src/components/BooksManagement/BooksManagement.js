@@ -67,7 +67,8 @@ const BooksManagement = () => {
   function removeBook(id) {
     fetch(DB_URL + "books/" + id, {
       method: "DELETE",
-      mode: 'no-cors',
+      mode: 'cors',
+      // mode: 'no-cors',
       // credentials: 'include',
       headers: { "Content-Type": "application/json" },
     })

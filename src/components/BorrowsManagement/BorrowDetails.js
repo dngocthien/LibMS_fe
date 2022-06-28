@@ -30,33 +30,25 @@ const BorrowDetails = () => {
                     setUserData(result[0])
                 });
 
-        //     fetch(DB_URL + "transactions/user/" + searchId,
-        //         {
-        //             method: "get",
-        //             mode: 'no-cors'
-        //         })
-        //         .then((res) => res.json())
-        //         .then((result) => {
-        //             if (result[0] != null) {
-        //                 console.log(result[0].id)
-        //                 setTransactionData(result[0]);
+            fetch(DB_URL + "transactions/user/" + searchId,
+                {
+                    method: "get"
+                })
+                .then((res) => res.json())
+                .then((result) => {
+                    if (result[0] != null) {
+                        setTransactionData(result[0])
 
-        //                 //   ///test
-        //                 // fetch(DB_URL + "/borrows/transaction/" + result[0].id,
-        //                 //     {
-        //                 //         method: "get"
-        //                 //     })
-        //                 //     .then((res2) => res2.json())
-        //                 //     .then((result2) => {
-        //                 //         if (result2 != null) {
-        //                 //             console.log(result2[0])
-        //                 //             setBorrowsData(result2[0]);
-        //                 //         }
-        //                 //     })
-        //                 //   //
-
-        //             }
-        //         })
+                        fetch(DB_URL + "borrows/transaction/" + result[0].id,
+                            {
+                                method: "get"
+                            })
+                            .then((res2) => res2.json())
+                            .then((result2) => {
+                                setBorrowsData(result2)
+                            })
+                    }
+                });
         }
     }, [searchId]);
 
@@ -93,6 +85,18 @@ const BorrowDetails = () => {
         setBooksData(update);
     }
 
+    function returnBook(d, newStatus) {
+        let existing = d;
+        existing.status = newStatus;
+
+        fetch(DB_URL + "borrows/" + d.id, {
+            method: "PUT",
+            mode: 'no-cors',
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify(existing),
+        });
+    }
+
     function lostBook(id) {
 
     }
@@ -114,7 +118,7 @@ const BorrowDetails = () => {
                     type="text"
                     placeholder="User ID"
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') setSearchId(searchQuery) }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { setSearchId(searchQuery); e.target.value = "" } }}
                 />
             </div>
 
@@ -162,7 +166,11 @@ const BorrowDetails = () => {
                                                     className={index % 2 === 0 ? "highlight" : ""}
                                                 >
                                                     <td>{d.bookId}</td>
-                                                    <td>{d.status ? "Returned" : "Not Returned"}</td>
+                                                    <td>
+                                                        <button className='btn-border' onClick={() => returnBook(d, !d.status)}>
+                                                            {d.status ? "Retured" : "Not returned"}
+                                                        </button>
+                                                    </td>
                                                     <td>
                                                         <img
                                                             src={icon_lost}

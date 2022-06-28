@@ -35,21 +35,21 @@ const UserDetails = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(
-                    // {
-                    //     name: name,
-                    //     phone: phone,
-                    //     email: email,
-                    //     issuedDate: issuedDate,
-                    //     expiredDate: expiredDate
-                    // }
-
                     {
-                        name: "testmoreandmore7",
-                        phone: "123456789",
-                        email: "test@gmail.com",
-                        issuedDate: "2022-02-13T14:45:15",
-                        expiredDate: "2023-02-13T14:45:15"
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        issuedDate: issuedDate,
+                        expiredDate: expiredDate
                     }
+
+                    // {
+                    //     name: "testmoreandmore7",
+                    //     phone: "123456789",
+                    //     email: "test@gmail.com",
+                    //     issuedDate: "2022-02-13T14:45:15",
+                    //     expiredDate: "2023-02-13T14:45:15"
+                    // }
                 )
             })
                 .then(navigate("/users"))

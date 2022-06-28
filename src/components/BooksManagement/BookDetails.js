@@ -38,11 +38,41 @@ const BookDetails = () => {
     function authorsToString(list) {
         let authors = "";
         list.map((a) => authors += a + ", ")
-        return authors.slice(0,-2);
+        return authors.slice(0, -2);
     };
 
-    function authorsToList(text){
+    function authorsToList(text) {
         return text.split(',');
+    }
+
+    function addBook() {
+        let b = {
+            'title': "test react post",
+            'edition': 1,
+            'price': 35,
+            'authors': ["author 1", "author 2"],
+            'categoryId': 2
+        }
+        const formData = new FormData();
+        formData.append("book", b);
+        fetch(DB_URL + "books", {
+            method: "post",
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: formData
+                // JSON.stringify(
+                    // {
+                    //     name: name,
+                    //     phone: phone,
+                    //     email: email,
+                    //     issuedDate: issuedDate,
+                    //     expiredDate: expiredDate
+                    // }
+                // )
+        })
+        // .then(navigate("/books"))
     }
 
     return (
@@ -114,7 +144,7 @@ const BookDetails = () => {
                         className='btn-yellow'
                         onClick={(event) => {
                             event.preventDefault();
-                            // addUser();
+                            addBook();
                         }}
                     >
                         Save

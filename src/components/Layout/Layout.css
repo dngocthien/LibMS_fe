@@ -60,6 +60,15 @@
     white-space: nowrap;
     cursor: pointer;
 }
+.btn-border{
+    font-weight: 500;
+    background-color: var(--white);
+    border: 1px solid var(--grey);
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
 .highlight{
     background-color: var(--light2);
 }
