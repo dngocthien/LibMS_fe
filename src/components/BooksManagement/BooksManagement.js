@@ -21,7 +21,7 @@ const BooksManagement = () => {
 
   useEffect(() => {
     loadData()
-  }, [searchQuery, data]);
+  }, [searchQuery]);
 
   function loadData(){
     fetch(DB_URL + "books/" + searchQuery,
@@ -61,7 +61,7 @@ const BooksManagement = () => {
     return authors.slice(0, -2);
   };
 
-  function removeBook(id) {
+  function deleteBook(id) {
     fetch(DB_URL + "books/" + id, {
       method: "DELETE",
     })
@@ -134,7 +134,7 @@ const BooksManagement = () => {
                       <img
                         src={icon_delete}
                         alt="delete"
-                        onClick={() => removeBook(d.id)}
+                        onClick={() => deleteBook(d.id)}
                       />
                       <img
                         src={icon_edit}

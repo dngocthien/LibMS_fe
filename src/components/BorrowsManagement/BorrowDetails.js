@@ -18,49 +18,51 @@ const BorrowDetails = () => {
 
     useEffect(() => {
         if (searchId !== -1) {
-            setTransactionData(null);
-            setBorrowsData([]);
-            setBooksData([]);
-            fetch(DB_URL + "users/id/" + searchId,
-                {
-                    method: "get"
-                })
-                .then((res) => res.json())
-                .then((result) => {
-                    setUserData(result[0])
-                });
-
-            fetch(DB_URL + "transactions/user/" + searchId,
-                {
-                    method: "get"
-                })
-                .then((res) => res.json())
-                .then((result) => {
-                    if (result[0] != null) {
-                        setTransactionData(result[0])
-
-                        fetch(DB_URL + "borrows/transaction/" + result[0].id,
-                            {
-                                method: "get"
-                            })
-                            .then((res2) => res2.json())
-                            .then((result2) => {
-                                setBorrowsData(result2)
-                            })
-                    }
-                });
+            loadUserData();
         }
     }, [searchId]);
 
-    function loadBorrowsData(){
-        fetch(DB_URL + "borrows/transaction/" + transactionData.id,
+    useEffect(() => {
+        if (searchId !== -1) {
+            loadTransactionData();
+        }
+    }, [userData]);
+
+    function loadUserData() {
+        setUserData(null)
+        fetch(DB_URL + "users/id/" + searchId,
             {
                 method: "get"
             })
-            .then((res2) => res2.json())
-            .then((result2) => {
-                setBorrowsData(result2)
+            .then((res) => res.json())
+            .then((result) => {
+                setUserData(result[0])
+            });
+    }
+
+    function loadTransactionData() {
+        setTransactionData(null);
+        setBorrowsData([]);
+        setBooksData([]);
+        fetch(DB_URL + "transactions/user/" + searchId,
+            {
+                method: "get"
             })
+            .then((res) => res.json())
+            .then((result) => {
+                if (result[0] != null) {
+                    setTransactionData(result[0])
+
+                    fetch(DB_URL + "borrows/transaction/" + result[0].id,
+                        {
+                            method: "get"
+                        })
+                        .then((res2) => res2.json())
+                        .then((result2) => {
+                            setBorrowsData(result2)
+                        })
+                }
+            });
     }
 
     function borrowBook() {
@@ -78,22 +80,48 @@ const BorrowDetails = () => {
                 if (result[0] != null) {
                     let existing = booksData.slice();
                     let update = [...existing, result[0]];
-                    console.log(update)
                     setBooksData(update);
                 }
             });
         document.getElementById('input-book').value = "";
-
-    }
-
-    function saveTransaction() {
-
     }
 
     function removeBook(id) {
         let existing = booksData.slice();
         let update = existing.filter((_, i) => i !== id)
         setBooksData(update);
+    }
+
+    function saveTransaction() {
+        fetch(DB_URL + "transactions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(
+                {
+                    issuedDate: new Date(),
+                    dueDate: new Date(),
+                    finished: false,
+                    userId: userData.id
+                }
+            )
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                let list = []
+                booksData.map((b) => {
+                    list = [...list, { returnDate: null, status: false, bookId: b.id, transactionId: result.id }]
+                })
+
+                fetch(DB_URL + "borrows/many", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(
+                        list
+                    )
+                })
+            })
+            .then(loadUserData())
+
     }
 
     function returnBook(d, newStatus) {
@@ -105,7 +133,28 @@ const BorrowDetails = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(existing),
         })
-        .then(loadBorrowsData);
+            .then(loadUserData())
+    }
+
+    function checkReturned() {
+        let returned = true;
+        borrowsData.map((b) => {
+            if (b.status == false) {
+                returned = false
+            }
+        })
+        return returned;
+    }
+
+    function closeTransaction() {
+        let updating = transactionData;
+        updating.finished = true;
+        fetch(DB_URL + "transactions/" + transactionData.id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updating),
+        })
+            .then((res)=>loadUserData())
     }
 
     function lostBook(id) {
@@ -140,63 +189,58 @@ const BorrowDetails = () => {
                         <p>Name: {userData.name}</p>
                         <p>Email: {userData.email}</p>
 
-
-                        {/* {transactionData==null?
-                            <div className='view-center'>
-                                <input
-                                    className='search-tiny'
-                                    id="input-book"
-                                    type="text"
-                                    placeholder="Book ID"
-                                    onKeyDown={(e) => { if (e.key === 'Enter') borrowBook() }}
-                                />
-                                <button className='btn-light' onClick={() => borrowBook()}>
-                                    Borrow
-                                </button>
-                            </div>
-                            :
-                            <></>
-                        } */}
-
-
+                        {/* Show borrows data */}
                         {borrowsData.length > 0 ?
-                            <div className='view-container'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Book ID</th>
-                                            <th>Status</th>
-                                            <th>Lost</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {borrowsData.map((d, index) => {
-                                            return (
-                                                <tr
-                                                    key={index}
-                                                    className={index % 2 === 0 ? "highlight" : ""}
-                                                >
-                                                    <td>{d.bookId}</td>
-                                                    <td>
-                                                        <button className='btn-border' onClick={() => returnBook(d, !d.status)}>
-                                                            {d.status ? "Retured" : "Not returned"}
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <img
-                                                            src={icon_lost}
-                                                            alt="lost"
-                                                            onClick={() => lostBook(index)}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                            <>
+                                <div className='view-container'>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Book ID</th>
+                                                <th>Status</th>
+                                                <th>Lost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {borrowsData.map((d, index) => {
+                                                return (
+                                                    <tr
+                                                        key={index}
+                                                        className={index % 2 === 0 ? "highlight" : ""}
+                                                    >
+                                                        <td>{d.bookId}</td>
+                                                        <td>
+                                                            <button className='btn-border' onClick={() => returnBook(d, !d.status)}>
+                                                                {d.status ? "Retured" : "Not returned"}
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <img
+                                                                src={icon_lost}
+                                                                alt="lost"
+                                                                onClick={() => lostBook(index)}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {
+                                    checkReturned() ?
+                                        <div className='view-center'>
+                                            <button className='btn-light' onClick={() => closeTransaction()}>
+                                                Done
+                                            </button>
+                                        </div>
+                                        : <></>
+                                }
+
+                            </>
                             :
+                            // Borrow book
                             <div className='view-center'>
                                 <input
                                     className='search-tiny'
