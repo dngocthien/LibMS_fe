@@ -22,7 +22,6 @@ const BookDetails = () => {
     useEffect(() => {
         fetch(DB_URL + "categories",
             {
-                // mode: 'no-cors',
                 method: "get"
             })
             .then((res) => res.json())
@@ -46,33 +45,41 @@ const BookDetails = () => {
     }
 
     function addBook() {
-        let b = {
-            'title': "test react post",
-            'edition': 1,
-            'price': 35,
-            'authors': ["author 1", "author 2"],
-            'categoryId': 2
-        }
-        const formData = new FormData();
-        formData.append("book", b);
         fetch(DB_URL + "books", {
-            method: "post",
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: formData
-                // JSON.stringify(
-                    // {
-                    //     name: name,
-                    //     phone: phone,
-                    //     email: email,
-                    //     issuedDate: issuedDate,
-                    //     expiredDate: expiredDate
-                    // }
-                // )
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body:
+                JSON.stringify(
+                    {
+                        title: title,
+                        edition: edition,
+                        price: price,
+                        quantity: quantity,
+                        authors: authorsToList(authors),
+                        categoryId: categoryId
+                    }
+                )
         })
-        // .then(navigate("/books"))
+            .then(navigate("/books"))
+    }
+
+    function updateBook() {
+        fetch(DB_URL + "books/" + book.id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body:
+                JSON.stringify(
+                    {
+                        title: title,
+                        edition: edition,
+                        price: price,
+                        quantity: quantity,
+                        authors: authorsToList(authors),
+                        categoryId: categoryId
+                    }
+                )
+        })
+            .then(navigate("/books"))
     }
 
     return (
@@ -144,7 +151,7 @@ const BookDetails = () => {
                         className='btn-yellow'
                         onClick={(event) => {
                             event.preventDefault();
-                            addBook();
+                            existed ? updateBook() : addBook();
                         }}
                     >
                         Save

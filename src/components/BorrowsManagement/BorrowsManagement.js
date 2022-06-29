@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 
-import icon_edit from "../../assets/edit.png";
+import icon_details from "../../assets/dot.png";
 import { DB_URL } from "../../constants";
 
 const BorrowsManagement = () => {
@@ -53,7 +53,6 @@ const BorrowsManagement = () => {
   }
 
   function getDate(d) {
-    // return d;
     return (d.substr(0, 10));
   };
 
@@ -117,7 +116,7 @@ const BorrowsManagement = () => {
                   <td>
                     <p>
                       <img
-                        src={icon_edit}
+                        src={icon_details}
                         alt="edit"
                         onClick={() => navigate("/borrows/details", { state: {userId: d.userId } })}
                       />

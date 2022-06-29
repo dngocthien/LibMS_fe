@@ -24,16 +24,13 @@ const UserDetails = () => {
 
     function addUser() {
         if (1) {
-            let issuedDate = user == null ? new Date() : user.expiredDate;
+            let issuedDate = new Date();
             let expiredDate = new Date();
             expiredDate.setMonth(issuedDate.getMonth() + duration);
 
             fetch(DB_URL + "users", {
-                method: "post",
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(
                     {
                         name: name,
@@ -42,14 +39,28 @@ const UserDetails = () => {
                         issuedDate: issuedDate,
                         expiredDate: expiredDate
                     }
+                )
+            })
+                .then(navigate("/users"))
+        }
+    }
 
-                    // {
-                    //     name: "testmoreandmore7",
-                    //     phone: "123456789",
-                    //     email: "test@gmail.com",
-                    //     issuedDate: "2022-02-13T14:45:15",
-                    //     expiredDate: "2023-02-13T14:45:15"
-                    // }
+    function editUser() {
+        if (1) {
+            let expiredDate = new Date(user.expiredDate);
+            expiredDate.setMonth(expiredDate.getMonth() + duration);
+
+            fetch(DB_URL + "users/" + user.id, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(
+                    {
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        issuedDate: user.issuedDate,
+                        expiredDate: expiredDate
+                    }
                 )
             })
                 .then(navigate("/users"))
@@ -125,7 +136,7 @@ const UserDetails = () => {
                         className='btn-yellow'
                         onClick={(event) => {
                             event.preventDefault();
-                            addUser();
+                            existed ? editUser() : addUser();
                         }}
                     >
                         Save

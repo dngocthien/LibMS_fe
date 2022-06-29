@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useLocation } from "react-router-dom";
 import { DB_URL } from '../../constants';
-import icon_lost from "../../assets/lost.png";
+import icon_lost from "../../assets/dot.png";
 import "./BorrowsManagement.css"
 
 const BorrowDetails = () => {
@@ -52,6 +52,17 @@ const BorrowDetails = () => {
         }
     }, [searchId]);
 
+    function loadBorrowsData(){
+        fetch(DB_URL + "borrows/transaction/" + transactionData.id,
+            {
+                method: "get"
+            })
+            .then((res2) => res2.json())
+            .then((result2) => {
+                setBorrowsData(result2)
+            })
+    }
+
     function borrowBook() {
         if (booksData.length > 3) {
             alert("You can only borrow less than 5 books!")
@@ -91,10 +102,10 @@ const BorrowDetails = () => {
 
         fetch(DB_URL + "borrows/" + d.id, {
             method: "PUT",
-            mode: 'no-cors',
-            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(existing),
-        });
+        })
+        .then(loadBorrowsData);
     }
 
     function lostBook(id) {
@@ -200,47 +211,45 @@ const BorrowDetails = () => {
                             </div>
                         }
                         {booksData.length > 0 ?
-                            <div className='view-container'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Book ID</th>
-                                            <th>Title</th>
-                                            <th>Authors</th>
-                                            <th>Remove</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {booksData.map((d, index) => {
-                                            return (
-                                                <tr
-                                                    key={index}
-                                                    className={index % 2 === 0 ? "highlight" : ""}
-                                                >
-                                                    <td>{d.id}</td>
-                                                    <td>{d.title}</td>
-                                                    <td>{authorsToString(d.authors)}</td>
-                                                    <td>
-                                                        <img
-                                                            src={icon_lost}
-                                                            alt="remove"
-                                                            onClick={() => removeBook(index)}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                            : <></>
-                        }
-
-                        {booksData.length > 0 ?
-                            <div className='view-center'>
-                                <button className='btn-light-small' onClick={() => saveTransaction()}>Done</button>
-                            </div>
+                            <>
+                                <div className='view-container'>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Book ID</th>
+                                                <th>Title</th>
+                                                <th>Authors</th>
+                                                <th>Remove</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {booksData.map((d, index) => {
+                                                return (
+                                                    <tr
+                                                        key={index}
+                                                        className={index % 2 === 0 ? "highlight" : ""}
+                                                    >
+                                                        <td>{d.id}</td>
+                                                        <td>{d.title}</td>
+                                                        <td>{authorsToString(d.authors)}</td>
+                                                        <td>
+                                                            <img
+                                                                src={icon_lost}
+                                                                alt="remove"
+                                                                onClick={() => removeBook(index)}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className='view-center'>
+                                    <button className='btn-light-small' onClick={() => saveTransaction()}>Done</button>
+                                </div>
+                            </>
                             : <></>
                         }
                     </div>

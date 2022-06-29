@@ -20,27 +20,24 @@ const BooksManagement = () => {
   ]
 
   useEffect(() => {
+    loadData()
+  }, [searchQuery, data]);
+
+  function loadData(){
     fetch(DB_URL + "books/" + searchQuery,
       {
-        method: "get"
+        method: "GET"
       })
       .then((res) => res.json())
       .then((result) => {
         setData(result);
       });
-  }, [searchQuery]);
+  }
 
   function filterReport(filter) {
     switch (filter.value) {
       case 0:
-        fetch(DB_URL + "books" ,
-          {
-            method: "get"
-          })
-          .then((res) => res.json())
-          .then((result) => {
-            setData(result);
-          });
+        loadData();
         break;
       case 1:
         console.log("still working");
@@ -67,11 +64,8 @@ const BooksManagement = () => {
   function removeBook(id) {
     fetch(DB_URL + "books/" + id, {
       method: "DELETE",
-      mode: 'cors',
-      // mode: 'no-cors',
-      // credentials: 'include',
-      headers: { "Content-Type": "application/json" },
     })
+    .then(loadData());
   }
 
   return (
