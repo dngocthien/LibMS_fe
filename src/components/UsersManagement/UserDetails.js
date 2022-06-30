@@ -129,7 +129,7 @@ const UserDetails = () => {
                     </table>
                 </div>
 
-                <div className="users-add-footer">
+                <div className="view-bottom">
                     <button className='btn-light' onClick={() => navigate("/users")}>Cancel</button>
 
                     <button

@@ -64,7 +64,7 @@
     font-weight: 500;
     background-color: var(--white);
     border: 1px solid var(--grey);
-    border-radius: 10px;
+    border-radius: 5px;
     padding: .5rem 1rem;
     white-space: nowrap;
     cursor: pointer;
@@ -133,6 +133,11 @@ h2{
     align-items: center;
     padding-top: 1rem;
 }
+.view-bottom{
+    display: flex;
+    justify-content: flex-end;
+    margin: 2rem 6rem 2rem 0;
+}
 .view-container{
     width: 100%;
     display: flex;
@@ -144,6 +149,8 @@ h2{
     justify-content: center;
     text-align: center;
     padding-top: 1rem;
+    border-collapse: collapse;
+    border: 1px solid var(--light1);
 }
 .view-container table img{
     height: 25px;
@@ -153,4 +160,6 @@ h2{
 .view-container table th{
     background-color: var(--light1);
     border: 0;
+    padding: .5rem 0;
 }
+

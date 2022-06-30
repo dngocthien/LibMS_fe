@@ -144,7 +144,7 @@ const BookDetails = () => {
                     </table>
                 </div>
 
-                <div className="users-add-footer">
+                <div className="view-bottom">
                     <button className='btn-light' onClick={() => navigate("/books")}>Cancel</button>
 
                     <button

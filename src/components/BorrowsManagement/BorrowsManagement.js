@@ -9,12 +9,8 @@ import { DB_URL } from "../../constants";
 const BorrowsManagement = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [byTime, setByTime] = useState(false);
   const [data, setData] = useState([]);
-
-  const report = [
-    { label: "All Transactions", value: 0 },
-    { label: "Overdue ", value: 1 },
-  ]
 
   useEffect(() => {
     fetch(DB_URL + "transactions/" + searchQuery,
@@ -27,7 +23,14 @@ const BorrowsManagement = () => {
       });
   }, [searchQuery]);
 
+  const report = [
+    { label: "All Transactions", value: 0 },
+    { label: "Time ", value: 1 },
+    { label: "Overdue ", value: 2 },
+  ]
+
   function filterReport(filter) {
+    setByTime(false);
     switch (filter.value) {
       case 0:
         fetch(DB_URL + "transactions",
@@ -40,6 +43,9 @@ const BorrowsManagement = () => {
           });
         break;
       case 1:
+        setByTime(true);
+        break;
+      case 2:
         fetch(DB_URL + "transactions/overdue",
           {
             method: "get"
@@ -50,6 +56,25 @@ const BorrowsManagement = () => {
           });
         break;
     }
+  }
+
+  function filterByTime() {
+    fetch(DB_URL + "transactions/time",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          {
+            fromDate: document.getElementById("input-from").value,
+            toDate: document.getElementById("input-to").value
+          }
+        )
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+      });
+
   }
 
   function getDate(d) {
@@ -66,22 +91,35 @@ const BorrowsManagement = () => {
           id="searching"
           type="text"
           placeholder="Search"
-          // onChange={(e) => setSearchQuery(e.target.value)}
+        // onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <button className='btn-yellow' onClick={() => navigate("/borrows/details", {state:{userId:-1}})}>
+        <button className='btn-yellow' onClick={() => navigate("/borrows/details", { state: { userId: -1 } })}>
           Borrow Books
         </button>
       </div>
 
 
+      {/* Filter */}
       <div className='filters'>
-        <Select
-          className='filters-select'
-          options={report}
-          placeholder="Report"
-          onChange={(e) => filterReport(e)}
-        />
+        <div className='filters-child'>
+
+          <Select
+            className='filters-select'
+            options={report}
+            placeholder="Report"
+            onChange={(e) => filterReport(e)}
+          />
+
+          {byTime ?
+            <>
+              <input id="input-from"></input>
+              <input id="input-to"></input>
+              <button className='btn-border' onClick={()=> filterByTime()}>Filter</button>
+            </>
+            : <></>
+          }
+        </div>
 
         <button className='btn-light-small'>
           Export
@@ -118,7 +156,7 @@ const BorrowsManagement = () => {
                       <img
                         src={icon_details}
                         alt="edit"
-                        onClick={() => navigate("/borrows/details", { state: {userId: d.userId } })}
+                        onClick={() => navigate("/borrows/details", { state: { userId: d.userId } })}
                       />
                     </p>
                   </td>
