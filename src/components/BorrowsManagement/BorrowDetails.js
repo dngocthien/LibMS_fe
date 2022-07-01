@@ -133,7 +133,7 @@ const BorrowDetails = () => {
     function returnBook(d) {
         let existing = d;
         existing.status = !existing.status;
-        existing.returnDate = new Date();
+        existing.status ? existing.returnDate = new Date() : existing.returnDate = null;
 
         fetch(DB_URL + "borrows/" + d.id, {
             method: "PUT",

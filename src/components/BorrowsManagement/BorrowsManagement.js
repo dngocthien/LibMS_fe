@@ -13,7 +13,7 @@ const BorrowsManagement = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch(DB_URL + "transactions/" + searchQuery,
+    fetch(DB_URL + "transactions" ,
       {
         method: "get"
       })
@@ -91,7 +91,10 @@ const BorrowsManagement = () => {
           id="searching"
           type="text"
           placeholder="Search"
-        // onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') navigate("/borrows/details", { state: { userId: searchQuery } })
+          }}
         />
 
         <button className='btn-yellow' onClick={() => navigate("/borrows/details", { state: { userId: -1 } })}>
@@ -115,7 +118,7 @@ const BorrowsManagement = () => {
             <>
               <input id="input-from"></input>
               <input id="input-to"></input>
-              <button className='btn-border' onClick={()=> filterByTime()}>Filter</button>
+              <button className='btn-border' onClick={() => filterByTime()}>Filter</button>
             </>
             : <></>
           }
