@@ -54,8 +54,12 @@ const BorrowDetails = () => {
             .then((result) => {
                 if (result[0] != null) {
                     setTransactionData(result[0])
+                }
+            });
+    }
 
-                    fetch(DB_URL + "borrows/transaction/" + result[0].id,
+    function loadBorrowsData() {
+        fetch(DB_URL + "borrows/user/" + searchId,
                         {
                             method: "get"
                         })
@@ -63,8 +67,6 @@ const BorrowDetails = () => {
                         .then((result2) => {
                             setBorrowsData(result2)
                         })
-                }
-            });
     }
 
     // add book to book list (to borrow)
@@ -140,7 +142,7 @@ const BorrowDetails = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(existing),
         })
-            .then(loadTransactionData())
+            .then(loadBorrowsData())
     }
 
     function checkReturned() {
