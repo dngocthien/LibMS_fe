@@ -5,7 +5,7 @@ import { DB_URL } from '../../constants';
 import icon_lost from "../../assets/dot.png";
 import "./BorrowsManagement.css"
 
-const BorrowDetails = () => {
+const TransactionDetails = () => {
     const { state } = useLocation();
     const { userId } = state;
     const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +27,7 @@ const BorrowDetails = () => {
     useEffect(() => {
         if (searchId !== -1) {
             loadTransactionData();
+            loadBorrowsData();
         }
     }, [userData]);
 
@@ -60,13 +61,13 @@ const BorrowDetails = () => {
 
     function loadBorrowsData() {
         fetch(DB_URL + "borrows/user/" + searchId,
-                        {
-                            method: "get"
-                        })
-                        .then((res2) => res2.json())
-                        .then((result2) => {
-                            setBorrowsData(result2)
-                        })
+            {
+                method: "get"
+            })
+            .then((res2) => res2.json())
+            .then((result2) => {
+                setBorrowsData(result2)
+            })
     }
 
     // add book to book list (to borrow)
@@ -100,34 +101,49 @@ const BorrowDetails = () => {
 
     // save transaction, save book list to db borrows
     function saveTransaction() {
+        let transaction = {
+            issuedDate: new Date(),
+            dueDate: new Date(),
+            finished: false,
+            userId: userData.id
+        }
+
+        let list = []
+        booksData.map((b) => {
+            list = [...list, { returnDate: null, status: false, bookId: b.id, transactionId: null }]
+        })
+
         fetch(DB_URL + "transactions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(
                 {
-                    issuedDate: new Date(),
-                    dueDate: new Date(),
-                    finished: false,
-                    userId: userData.id
+                    transaction: {
+                        issuedDate: new Date(),
+                        dueDate: new Date(),
+                        finished: false,
+                        userId: userData.id
+                    }, list: null
                 }
             )
         })
-            .then((res) => res.json())
-            .then((result) => {
-                let list = []
-                booksData.map((b) => {
-                    list = [...list, { returnDate: null, status: false, bookId: b.id, transactionId: result.id }]
-                })
-
-                fetch(DB_URL + "borrows/many", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(
-                        list
-                    )
-                })
-            })
             .then(loadUserData())
+        // .then((res) => res.json())
+        // .then((result) => {
+        //     let list = []
+        //     booksData.map((b) => {
+        //         list = [...list, { returnDate: null, status: false, bookId: b.id, transactionId: result.id }]
+        //     })
+
+        //     fetch(DB_URL + "borrows/many", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(
+        //             list
+        //         )
+        //     })
+        // })
+        // .then(loadUserData())
 
     }
 
@@ -205,7 +221,7 @@ const BorrowDetails = () => {
     return (
         <div>
             <div className='view-header'>
-                <h1>Borrows Details</h1>
+                <h1>Transaction Details</h1>
 
                 <input
                     className='search-small'
@@ -246,7 +262,7 @@ const BorrowDetails = () => {
                                                         <td>{d.bookId}</td>
                                                         <td>
                                                             <button className='btn-border' onClick={() => returnBook(d)}>
-                                                                {d.status ? "Retured" : "Not returned"}
+                                                                {d.status ? "Returned" : "Not returned"}
                                                             </button>
                                                         </td>
                                                         <td>
@@ -370,4 +386,4 @@ const BorrowDetails = () => {
     )
 }
 
-export default BorrowDetails
+export default TransactionDetails

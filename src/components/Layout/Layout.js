@@ -16,7 +16,7 @@ const Layout = () => {
 
         <nav className="navbar-links">
             <p>
-              <Link className="text-link" to="/">Borrows</Link>
+              <Link className="text-link" to="/">Transactions</Link>
             </p>
             <p>
               <Link className="text-link" to="/books">Books</Link>

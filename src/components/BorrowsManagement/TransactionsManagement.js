@@ -6,22 +6,15 @@ import { useNavigate } from "react-router-dom";
 import icon_details from "../../assets/dot.png";
 import { DB_URL } from "../../constants";
 
-const BorrowsManagement = () => {
+const TransactionsManagement = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [byTime, setByTime] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch(DB_URL + "transactions" ,
-      {
-        method: "get"
-      })
-      .then((res) => res.json())
-      .then((result) => {
-        setData(result);
-      });
-  }, [searchQuery]);
+    loadTransactions()
+  },[]);
 
   const report = [
     { label: "All Transactions", value: 0 },
@@ -33,29 +26,26 @@ const BorrowsManagement = () => {
     setByTime(false);
     switch (filter.value) {
       case 0:
-        fetch(DB_URL + "transactions",
-          {
-            method: "get"
-          })
-          .then((res) => res.json())
-          .then((result) => {
-            setData(result);
-          });
+        loadTransactions()
         break;
       case 1:
-        setByTime(true);
+        setByTime(true)
         break;
       case 2:
-        fetch(DB_URL + "transactions/overdue",
+        getOverDue()
+        break;
+    }
+  }
+
+  function loadTransactions(){
+    fetch(DB_URL + "transactions",
           {
             method: "get"
           })
           .then((res) => res.json())
           .then((result) => {
             setData(result);
-          });
-        break;
-    }
+          })
   }
 
   function filterByTime() {
@@ -74,24 +64,17 @@ const BorrowsManagement = () => {
       .then((result) => {
         setData(result);
       });
+  }
 
-      //test top book
-      fetch(DB_URL + "borrows/time",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
+  function getOverDue(){
+    fetch(DB_URL + "transactions/overdue",
           {
-            fromDate: document.getElementById("input-from").value,
-            toDate: document.getElementById("input-to").value
-          }
-        )
-      })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result)
-      });
-
+            method: "get"
+          })
+          .then((res) => res.json())
+          .then((result) => {
+            setData(result);
+          })
   }
 
   function getDate(d) {
@@ -101,7 +84,7 @@ const BorrowsManagement = () => {
   return (
     <div className='view'>
       <div className='view-header'>
-        <h1>Borrows Management</h1>
+        <h1>Transactions Management</h1>
 
         <input
           className='search'
@@ -110,11 +93,11 @@ const BorrowsManagement = () => {
           placeholder="Search"
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') navigate("/borrows/details", { state: { userId: searchQuery } })
+            if (e.key === 'Enter') navigate("/transactions/details", { state: { userId: searchQuery } })
           }}
         />
 
-        <button className='btn-yellow' onClick={() => navigate("/borrows/details", { state: { userId: -1 } })}>
+        <button className='btn-yellow' onClick={() => navigate("/transactions/details", { state: { userId: -1 } })}>
           Borrow Books
         </button>
       </div>
@@ -176,7 +159,7 @@ const BorrowsManagement = () => {
                       <img
                         src={icon_details}
                         alt="edit"
-                        onClick={() => navigate("/borrows/details", { state: { userId: d.userId } })}
+                        onClick={() => navigate("/transactions/details", { state: { userId: d.userId } })}
                       />
                     </p>
                   </td>
@@ -190,4 +173,4 @@ const BorrowsManagement = () => {
   )
 };
 
-export default BorrowsManagement;
+export default TransactionsManagement;

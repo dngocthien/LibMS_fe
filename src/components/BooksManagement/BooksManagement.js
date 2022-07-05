@@ -12,10 +12,12 @@ const BooksManagement = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
+  const [byTime, setByTime] = useState(false);
+  const [topBooks, setTopBooks] = useState([]);
 
   const report = [
     { label: "All Books", value: 0 },
-    // { label: "Top Books", value: 1 },
+    { label: "Top Books", value: 1 },
     { label: "None Books", value: 2 },
   ]
 
@@ -23,7 +25,7 @@ const BooksManagement = () => {
     loadData()
   }, [searchQuery]);
 
-  function loadData(){
+  function loadData() {
     fetch(DB_URL + "books/" + searchQuery,
       {
         method: "GET"
@@ -37,35 +39,57 @@ const BooksManagement = () => {
   function filterReport(filter) {
     switch (filter.value) {
       case 0:
-        loadData();
+        loadData()
         break;
       case 1:
-        console.log("still working");
+        setByTime(true)
         break;
       case 2:
-        fetch(DB_URL + "books/none" ,
-          {
-            method: "get"
-          })
-          .then((res) => res.json())
-          .then((result) => {
-            setData(result);
-          });
+        getNoneBooks();
         break;
     }
+  }
+
+  function getTopBooks() {
+    fetch(DB_URL + "borrows/time",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          {
+            fromDate: document.getElementById("input-from").value,
+            toDate: document.getElementById("input-to").value
+          }
+        )
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        setTopBooks(result)
+      })
+  }
+
+  function getNoneBooks() {
+    fetch(DB_URL + "books/none",
+      {
+        method: "get"
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+      })
   }
 
   function authorsToString(list) {
     let authors = "";
     list.map((a) => authors += a + ", ")
     return authors.slice(0, -2);
-  };
+  }
 
   function deleteBook(id) {
     fetch(DB_URL + "books/" + id, {
       method: "DELETE",
     })
-    .then(loadData());
+      .then(loadData());
   }
 
   return (
@@ -88,12 +112,24 @@ const BooksManagement = () => {
 
 
       <div className='filters'>
-        <Select
-          className='filters-select'
-          options={report}
-          placeholder="Report"
-          onChange={(e) => filterReport(e)}
-        />
+        <div className='filters-child'>
+
+          <Select
+            className='filters-select'
+            options={report}
+            placeholder="Report"
+            onChange={(e) => filterReport(e)}
+          />
+
+          {byTime ?
+            <>
+              <input id="input-from"></input>
+              <input id="input-to"></input>
+              <button className='btn-border' onClick={() => getTopBooks()}>Filter</button>
+            </>
+            : <></>
+          }
+        </div>
 
         <button className='btn-light-small'>
           Export
