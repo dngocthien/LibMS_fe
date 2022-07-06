@@ -14,7 +14,7 @@ const TransactionsManagement = () => {
 
   useEffect(() => {
     loadTransactions()
-  },[]);
+  }, []);
 
   const report = [
     { label: "All Transactions", value: 0 },
@@ -37,15 +37,15 @@ const TransactionsManagement = () => {
     }
   }
 
-  function loadTransactions(){
+  function loadTransactions() {
     fetch(DB_URL + "transactions",
-          {
-            method: "get"
-          })
-          .then((res) => res.json())
-          .then((result) => {
-            setData(result);
-          })
+      {
+        method: "get"
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+      })
   }
 
   function filterByTime() {
@@ -66,15 +66,15 @@ const TransactionsManagement = () => {
       });
   }
 
-  function getOverDue(){
+  function getOverDue() {
     fetch(DB_URL + "transactions/overdue",
-          {
-            method: "get"
-          })
-          .then((res) => res.json())
-          .then((result) => {
-            setData(result);
-          })
+      {
+        method: "get"
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+      })
   }
 
   function getDate(d) {
@@ -143,7 +143,7 @@ const TransactionsManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((d, index) => {
+            {data != null ? data.map((d, index) => {
               return (
                 <tr
                   key={index}
@@ -165,7 +165,7 @@ const TransactionsManagement = () => {
                   </td>
                 </tr>
               );
-            })}
+            }) : <>Loading</>}
           </tbody>
         </table>
       </div>

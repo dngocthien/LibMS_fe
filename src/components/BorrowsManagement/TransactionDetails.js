@@ -27,15 +27,12 @@ const TransactionDetails = () => {
     useEffect(() => {
         if (searchId !== -1) {
             loadTransactionData();
-            loadBorrowsData();
         }
     }, [userData]);
 
     function loadUserData() {
         setUserData(null);
-        setTransactionData(null);
-        setBorrowsData([]);
-        setBooksData([]);
+        // setTransactionData(null);
         fetch(DB_URL + "users/id/" + searchId,
             {
                 method: "get"
@@ -47,6 +44,8 @@ const TransactionDetails = () => {
     }
 
     function loadTransactionData() {
+        setBorrowsData([]);
+        setBooksData([]);
         fetch(DB_URL + "transactions/user/" + searchId,
             {
                 method: "get"
@@ -57,6 +56,7 @@ const TransactionDetails = () => {
                     setTransactionData(result[0])
                 }
             });
+        loadBorrowsData();
     }
 
     function loadBorrowsData() {
@@ -108,9 +108,9 @@ const TransactionDetails = () => {
             userId: userData.id
         }
 
-        let list = []
+        let borrows = []
         booksData.map((b) => {
-            list = [...list, { returnDate: null, status: false, bookId: b.id, transactionId: null }]
+            borrows = [...borrows, { returnDate: null, status: false, bookId: b.id, transactionId: null }]
         })
 
         fetch(DB_URL + "transactions", {
@@ -118,33 +118,12 @@ const TransactionDetails = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(
                 {
-                    transaction: {
-                        issuedDate: new Date(),
-                        dueDate: new Date(),
-                        finished: false,
-                        userId: userData.id
-                    }, list: null
+                    transactionDto: transaction, borrows: borrows
                 }
             )
         })
-            .then(loadUserData())
-        // .then((res) => res.json())
-        // .then((result) => {
-        //     let list = []
-        //     booksData.map((b) => {
-        //         list = [...list, { returnDate: null, status: false, bookId: b.id, transactionId: result.id }]
-        //     })
-
-        //     fetch(DB_URL + "borrows/many", {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify(
-        //             list
-        //         )
-        //     })
-        // })
-        // .then(loadUserData())
-
+            .then((res) => res.json)
+            .then(loadTransactionData())
     }
 
     // change return satatus each book
