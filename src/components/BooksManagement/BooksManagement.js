@@ -64,6 +64,23 @@ const BooksManagement = () => {
       })
       .then((res) => res.json())
       .then((result) => {
+        console.log(result)
+      })
+
+    fetch(DB_URL + "books/top",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          {
+            fromDate: document.getElementById("input-from").value,
+            toDate: document.getElementById("input-to").value
+          }
+        )
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result)
         setTopBooks(result)
       })
   }
